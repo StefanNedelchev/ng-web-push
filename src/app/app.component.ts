@@ -3,8 +3,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwPush, SwUpdate } from '@angular/service-worker';
-import { lastValueFrom, timer } from 'rxjs';
-import { mergeMap, take, tap } from 'rxjs/operators';
+import { lastValueFrom } from 'rxjs';
+import { delay, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -52,8 +52,7 @@ export class AppComponent implements AfterViewInit {
       tap((clickEvent) => {
         this.lastClickEvent.set(`${clickEvent.action} | ${clickEvent.notification.title}`);
       }),
-      mergeMap(() => timer(5000)),
-      take(1),
+      delay(5000),
     )
       .subscribe(() => this.lastClickEvent.set(null));
   }
