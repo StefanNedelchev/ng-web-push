@@ -37,6 +37,11 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
+    if (Notification.permission === 'denied') {
+      this.errorMessage.set('❌ Notification permissions have are denied!');
+      return;
+    }
+
     this.route.queryParams.subscribe((queryParams) => {
       if (queryParams['source'] === 'notification') {
         this.isOpenedFromNotification.set(true);
@@ -98,9 +103,9 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
-    const sub = this.pushSubscription() ?? await this.swPush.requestSubscription({ serverPublicKey: this.serverPublicKey });
-
     try {
+      const sub = this.pushSubscription() ?? await this.swPush.requestSubscription({ serverPublicKey: this.serverPublicKey });
+
       await lastValueFrom(
         this.http.post(`${this.netlifyApiBaseUrl}/subscribe`, sub.toJSON(), {
           headers: {
