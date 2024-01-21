@@ -1,7 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { lastValueFrom } from 'rxjs';
 import { delay, take, tap } from 'rxjs/operators';
@@ -18,6 +18,7 @@ export class AppComponent implements AfterViewInit {
   public notificationMessages = signal<unknown[]>([]);
   public lastClickEvent = signal<string | null>(null);
   public errorMessage = signal<string | null>(null);
+  public isOpenedFromNotification = signal<boolean>(false);
 
   private readonly netlifyApiBaseUrl = 'https://ng-web-push-example.netlify.app/.netlify/functions/api';
   private readonly serverPublicKey = 'BLBXQXDsaEO-HGQZZK0a0_1BNA16631qK0kvpj3NbD6p4LKwN6Ks4VPnwuvtYSyR5Yw5qdGIyVLgC_oH1oBIYa8';
@@ -25,7 +26,8 @@ export class AppComponent implements AfterViewInit {
   constructor(
     private readonly swPush: SwPush,
     private readonly swUpdate: SwUpdate,
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly route: ActivatedRoute,
   ) { }
 
   public ngAfterViewInit(): void {
@@ -33,6 +35,12 @@ export class AppComponent implements AfterViewInit {
       this.errorMessage.set('❌ Service Worker not enabled');
       return;
     }
+
+    this.route.queryParams.subscribe((queryParams) => {
+      if (queryParams['source'] === 'notification') {
+        this.isOpenedFromNotification.set(true);
+      }
+    });
 
     this.swUpdate.checkForUpdate().then((hasUpdate) => {
       if (hasUpdate) {
