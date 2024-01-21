@@ -125,19 +125,21 @@ router.delete('/unsubscribe', (req: Request<unknown, unknown, WebPushSubscriptio
   //   });
 });
 router.post('/send-message', (req, res) => {
-  const sendPromises = inMemoryDb.map((sub) => (
-    send(sub).catch((err) => {
-      if (err.statusCode === 404 || err.statusCode === 410) {
-        console.log('Subscription has expired or is no longer valid: ', err.message);
-        inMemoryDb = inMemoryDb.filter((s) => s.endpoint !== sub.endpoint);
-      } else {
-        console.error(err);
-      }
-    })
-  ));
-  Promise.all(sendPromises).then(() => {
-    res.status(200).send();
-  });
+  setTimeout(() => {
+    const sendPromises = inMemoryDb.map((sub) => (
+      send(sub).catch((err) => {
+        if (err.statusCode === 404 || err.statusCode === 410) {
+          console.log('Subscription has expired or is no longer valid: ', err.message);
+          inMemoryDb = inMemoryDb.filter((s) => s.endpoint !== sub.endpoint);
+        } else {
+          console.error(err);
+        }
+      })
+    ));
+    Promise.all(sendPromises);
+  }, 4000);
+
+  res.status(200).send();
 
   // getAllSubscriptions()
   //   .then((subs) => {
