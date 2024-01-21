@@ -80,7 +80,8 @@ export class AppComponent implements AfterViewInit {
 
     try {
       await lastValueFrom(
-        this.http.post(`${this.netlifyApiBaseUrl}/unsubscribe`, this.pushSubscription(), {
+        this.http.delete(`${this.netlifyApiBaseUrl}/unsubscribe`, {
+          body: this.pushSubscription()?.toJSON(),
           headers: {
             'content-type': 'application/json',
           },
