@@ -1,0 +1,28 @@
+<h2>Push test</h2>
+
+@if(errorMessage() !== null) {
+  <h3>Error:</h3>
+  <p><em>{{ errorMessage() }}</em></p>
+}
+
+@switch(pushSubscription()) {
+  @case(null) {
+    <button type="button" (click)="subscribe()">Subscribe</button>
+  }
+  @default {
+    <h3>Subscription:</h3>
+    <p>{{ pushSubscription()!.endpoint }}</p>
+    <button type="button" (click)="unsubscribe()">Subscribe</button>
+    <button type="button" (click)="trigger()">Trigger</button>
+  }
+}
+
+@if(lastClickEvent() !== null) {
+  <h3>Notification clicked:</h3>
+  <p>{{ lastClickEvent() }}</p>
+}
+
+<h3>Messages:</h3>
+@for (message of notificationMessages(); track message) {
+  <p>{{ message | json }}</p>
+}
