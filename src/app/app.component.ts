@@ -3,8 +3,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { SwPush, SwUpdate } from '@angular/service-worker';
-import { lastValueFrom } from 'rxjs';
-import { delay, take, tap } from 'rxjs/operators';
+import { lastValueFrom, throwError } from 'rxjs';
+import { catchError, delay, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -59,13 +59,31 @@ export class AppComponent implements AfterViewInit {
       this.pushSubscription.set(sub);
     });
 
-    this.swPush.messages.subscribe((m) => {
-      this.notificationMessages.update((oldValue) => ([...oldValue, m]));
+    this.swPush.messages.subscribe({
+      next: (m) => {
+        this.notificationMessages.update((oldValue) => ([...oldValue, m]));
+      },
+      error: (err) => {
+        if (err instanceof Error) {
+          this.errorMessage.set(err.message);
+        } else if (typeof err === 'string') {
+          this.errorMessage.set(err);
+        }
+      }
     });
 
     this.swPush.notificationClicks.pipe(
       tap((clickEvent) => {
         this.lastClickEvent.set(`${clickEvent.action} | ${clickEvent.notification.title}`);
+      }),
+      catchError((err) => {
+        if (err instanceof Error) {
+          this.errorMessage.set(err.message);
+        } else if (typeof err === 'string') {
+          this.errorMessage.set(err);
+        }
+
+        return throwError(() => err);
       }),
       delay(5000),
     )
