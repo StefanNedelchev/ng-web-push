@@ -2,6 +2,10 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.0.
 
+## Demo
+
+The app has been deployed via Netlify [here](https://ng-web-push-example.netlify.app/). The push service has been implemented via Netlify function and subscriptions are kept in memory so keep in mind that you will lose all subscriptions when the function is destroyed (which happens in a few minutes after last activity). If such thing happens simply unsubscribe and subscribe again.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
