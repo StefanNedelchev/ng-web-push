@@ -43,7 +43,7 @@ export class AppComponent implements AfterViewInit {
         setTimeout(() => {
           this.router.navigate(
             ['/'],
-            { queryParams: { source: undefined } }
+            { queryParams: { source: undefined }, replaceUrl: true }
           );
         }, 4000);
       }
