@@ -142,6 +142,6 @@ router.post('/send-message', (req, res) => {
 });
 
 
-app.use('/api/', router);
+app.use('/.netlify/functions/api/', router);
 
 export const handler = serverless(app);
