@@ -2,7 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SwPush } from '@angular/service-worker';
+import { SwPush, SwUpdate } from '@angular/service-worker';
 import { lastValueFrom, timer } from 'rxjs';
 import { mergeMap, take, tap } from 'rxjs/operators';
 
@@ -24,10 +24,22 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     private readonly swPush: SwPush,
+    private readonly swUpdate: SwUpdate,
     private readonly http: HttpClient
   ) { }
 
   public ngAfterViewInit(): void {
+    if (!this.swPush.isEnabled) {
+      this.errorMessage.set('❌ Service Worker not enabled');
+      return;
+    }
+
+    this.swUpdate.checkForUpdate().then((hasUpdate) => {
+      if (hasUpdate) {
+        window.location.reload();
+      }
+    });
+
     this.swPush.subscription.pipe(take(1)).subscribe((sub) => {
       this.pushSubscription.set(sub);
     });
