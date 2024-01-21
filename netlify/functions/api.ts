@@ -3,7 +3,7 @@ import cors from 'cors';
 import express, { Router, Request } from 'express';
 import serverless from 'serverless-http';
 // import sqlite3 from 'sqlite3';
-import { PushSubscription as WebPushSubscription, sendNotification, setVapidDetails } from 'web-push';
+import { SendResult, PushSubscription as WebPushSubscription, sendNotification, setVapidDetails } from 'web-push';
 
 const vapidKeys = {
   private: 'vJaR1x_O09UIBqmt1owOZDwPBg1-PLsHuanV-0_BH3Y',
@@ -14,12 +14,14 @@ let inMemoryDb: WebPushSubscription[] = [];
 
 setVapidDetails('mailto:example@yourdomain.org', vapidKeys.public, vapidKeys.private);
 
-function send(sub: WebPushSubscription) {
+function send(sub: WebPushSubscription): Promise<SendResult> {
   const notification = {
     title: 'Hey there!',
     body: 'This is a test notification.',
     icon: `https://icon-library.com/images/doge-icon/doge-icon-21.jpg`,
     timestamp: Date.now(),
+    requireInteraction: true,
+    renotify: true,
     data: {
       onActionClick: {
         default: { operation: 'focusLastFocusedOrOpen', url: '/?source=notification' },
