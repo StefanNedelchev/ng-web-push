@@ -27,7 +27,7 @@ function send(sub: WebPushSubscription) {
     },
   };
 
-  return sendNotification(sub, JSON.stringify(notification));
+  return sendNotification(sub, JSON.stringify({ notification }));
 }
 
 // const db = new sqlite3.Database('subs-db.db', (err) => {
