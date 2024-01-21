@@ -53,7 +53,7 @@ export class AppComponent implements AfterViewInit {
               replaceUrl: true,
               onSameUrlNavigation: 'reload',
             },
-          );
+          ).then(() => this.isOpenedFromNotification.set(false));
         }, 4000);
       }
     });
