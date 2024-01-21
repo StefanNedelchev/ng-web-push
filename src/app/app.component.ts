@@ -54,7 +54,7 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
-    const sub = await this.swPush.requestSubscription({ serverPublicKey: this.serverPublicKey });
+    const sub = this.pushSubscription() ?? await this.swPush.requestSubscription({ serverPublicKey: this.serverPublicKey });
 
     try {
       await lastValueFrom(
@@ -101,7 +101,7 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
-    this.http.post(`${this.netlifyApiBaseUrl}/send-message`, this.pushSubscription(), {
+    this.http.post(`${this.netlifyApiBaseUrl}/send-message`, undefined, {
       headers: {
         'content-type': 'application/json',
       },

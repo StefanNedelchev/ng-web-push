@@ -114,7 +114,7 @@ router.post('/subscribe', (req: Request<unknown, unknown, WebPushSubscription>, 
   //     res.status(422).send({ message: `❌ Subscription was not saved. ${err.message}` });
   //   });
 });
-router.delete('/unsubscripbe', (req: Request<unknown, unknown, WebPushSubscription>, res) => {
+router.delete('/unsubscribe', (req: Request<unknown, unknown, WebPushSubscription>, res) => {
   inMemoryDb = inMemoryDb.filter((sub) => sub.endpoint !== req.body.endpoint);
   res.status(200).send({ message: `❎ Subscription was removed.` });
   // deleteSubscription(req.body.endpoint)
@@ -130,7 +130,7 @@ router.post('/send-message', (req, res) => {
       send(sub).catch((err) => {
         if (err.statusCode === 404 || err.statusCode === 410) {
           console.log('Subscription has expired or is no longer valid: ', err.message);
-          inMemoryDb = inMemoryDb.filter((sub) => sub.endpoint !== req.body.endpoint);
+          inMemoryDb = inMemoryDb.filter((s) => s.endpoint !== sub.endpoint);
         } else {
           console.error(err);
         }
