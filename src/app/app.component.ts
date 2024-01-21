@@ -19,7 +19,7 @@ export class AppComponent implements AfterViewInit {
   public lastClickEvent = signal<string | null>(null);
   public errorMessage = signal<string | null>(null);
 
-  private readonly netlifyApiBaseUrl = 'http://localhost:8888/api';
+  private readonly netlifyApiBaseUrl = 'https://ng-web-push-example.netlify.app/.netlify/functions/api';
   private readonly serverPublicKey = 'BLBXQXDsaEO-HGQZZK0a0_1BNA16631qK0kvpj3NbD6p4LKwN6Ks4VPnwuvtYSyR5Yw5qdGIyVLgC_oH1oBIYa8';
 
   constructor(
