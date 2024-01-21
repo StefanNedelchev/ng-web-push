@@ -1,7 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, signal } from '@angular/core';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { lastValueFrom } from 'rxjs';
 import { delay, take, tap } from 'rxjs/operators';
@@ -28,6 +28,7 @@ export class AppComponent implements AfterViewInit {
     private readonly swUpdate: SwUpdate,
     private readonly http: HttpClient,
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
   ) { }
 
   public ngAfterViewInit(): void {
@@ -39,6 +40,12 @@ export class AppComponent implements AfterViewInit {
     this.route.queryParams.subscribe((queryParams) => {
       if (queryParams['source'] === 'notification') {
         this.isOpenedFromNotification.set(true);
+        setTimeout(() => {
+          this.router.navigate(
+            ['/'],
+            { queryParams: { source: undefined } }
+          );
+        }, 4000);
       }
     });
 
