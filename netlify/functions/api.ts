@@ -125,38 +125,36 @@ router.delete('/unsubscribe', (req: Request<unknown, unknown, WebPushSubscriptio
   //   });
 });
 router.post('/send-message', (req, res) => {
-  setTimeout(() => {
-    const sendPromises = inMemoryDb.map((sub) => (
-      send(sub).catch((err) => {
-        if (err.statusCode === 404 || err.statusCode === 410) {
-          console.log('Subscription has expired or is no longer valid: ', err.message);
-          inMemoryDb = inMemoryDb.filter((s) => s.endpoint !== sub.endpoint);
-        } else {
-          console.error(err);
-        }
-      })
-    ));
-    Promise.all(sendPromises);
+  const sendPromises = inMemoryDb.map((sub) => (
+    send(sub).catch((err) => {
+      if (err.statusCode === 404 || err.statusCode === 410) {
+        console.log('Subscription has expired or is no longer valid: ', err.message);
+        inMemoryDb = inMemoryDb.filter((s) => s.endpoint !== sub.endpoint);
+      } else {
+        console.error(err);
+      }
+    })
+  ));
+  Promise.all(sendPromises).then(() => {
+    res.status(200).send();
+  });
 
-    // getAllSubscriptions()
-    //   .then((subs) => {
-    //     const sendPromises = subs.map((sub) => (
-    //       send(sub).catch((err) => {
-    //         if (err.statusCode === 404 || err.statusCode === 410) {
-    //           console.log('Subscription has expired or is no longer valid: ', err.message);
-    //           deleteSubscription(sub.endpoint);
-    //         } else {
-    //           console.error(err);
-    //         }
-    //       })
-    //     ));
-    //     Promise.all(sendPromises);
+  // getAllSubscriptions()
+  //   .then((subs) => {
+  //     const sendPromises = subs.map((sub) => (
+  //       send(sub).catch((err) => {
+  //         if (err.statusCode === 404 || err.statusCode === 410) {
+  //           console.log('Subscription has expired or is no longer valid: ', err.message);
+  //           deleteSubscription(sub.endpoint);
+  //         } else {
+  //           console.error(err);
+  //         }
+  //       })
+  //     ));
+  //     Promise.all(sendPromises);
 
-    //   })
-    //   .catch((err) => console.error(err))
-  }, 5000);
-
-  res.status(200).send();
+  //   })
+  //   .catch((err) => console.error(err))
 });
 
 
