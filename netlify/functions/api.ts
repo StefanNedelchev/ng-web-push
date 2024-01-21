@@ -20,8 +20,8 @@ function send(sub: WebPushSubscription): Promise<SendResult> {
     body: 'This is a test notification.',
     icon: `https://icon-library.com/images/doge-icon/doge-icon-21.jpg`,
     timestamp: Date.now(),
-    requireInteraction: true,
-    renotify: true,
+    // requireInteraction: true,
+    // renotify: true,
     data: {
       onActionClick: {
         default: { operation: 'focusLastFocusedOrOpen', url: '/?source=notification' },
