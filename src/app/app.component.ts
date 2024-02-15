@@ -38,10 +38,7 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
-    navigator.serviceWorker.ready.then((reg) => {
-      const url = new URL('/test?param1=test', reg.scope).href;
-      this.locationHref.set(url);
-    });
+    this.locationHref.set(location.href);
 
     if (Notification.permission === 'denied') {
       this.errorMessage.set('❌ Notification permissions have are denied!');

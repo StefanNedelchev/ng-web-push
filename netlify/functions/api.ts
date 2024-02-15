@@ -24,7 +24,7 @@ function send(sub: WebPushSubscription): Promise<SendResult> {
     // renotify: true,
     data: {
       onActionClick: {
-        default: { operation: 'focusLastFocusedOrOpen', url: '/?source=notification' },
+        default: { operation: 'navigateLastFocusedOrOpen', url: '/?source=notification' },
       },
     },
   };
