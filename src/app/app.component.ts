@@ -19,6 +19,7 @@ export class AppComponent implements AfterViewInit {
   public lastClickEvent = signal<string | null>(null);
   public errorMessage = signal<string | null>(null);
   public isOpenedFromNotification = signal<boolean>(false);
+  public locationHref = signal<string>('');
 
   private readonly netlifyApiBaseUrl = 'https://ng-web-push-example.netlify.app/.netlify/functions/api';
   private readonly serverPublicKey = 'BLBXQXDsaEO-HGQZZK0a0_1BNA16631qK0kvpj3NbD6p4LKwN6Ks4VPnwuvtYSyR5Yw5qdGIyVLgC_oH1oBIYa8';
@@ -36,6 +37,11 @@ export class AppComponent implements AfterViewInit {
       this.errorMessage.set('❌ Service Worker not enabled');
       return;
     }
+
+    navigator.serviceWorker.ready.then((reg) => {
+      const url = new URL('/test?param1=test', reg.scope).href;
+      this.locationHref.set(url);
+    });
 
     if (Notification.permission === 'denied') {
       this.errorMessage.set('❌ Notification permissions have are denied!');
